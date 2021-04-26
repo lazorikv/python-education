@@ -1,2 +1,2 @@
-docker pull lazorykv/task1:latest
-docker pull lazorykv/task1:1.0.0
+docker run -it --name TASK1 lazorykv/task1:latest /bin/bash
+docker run -it --name TASK_1 lazorykv/task1:1.0.0 /bin/bash
