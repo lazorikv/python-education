@@ -1,0 +1,2 @@
+docker pull lazorykv/task1:latest
+docker pull lazorykv/task1:1.0.0
