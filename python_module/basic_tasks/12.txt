@@ -1,0 +1,7 @@
+"""Make set A, set B and find difference"""
+
+a = ["Jake", "John", "Eric"]
+b = ["John", "Jill"]
+A = set(a)
+B =set(b)
+print(B.difference(A))
