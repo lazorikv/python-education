@@ -12,28 +12,32 @@ def random_word():
 
 def menu():
     """Функция Меню для выбора действий"""
-    print("1 - Начать игру\n2 - Посмотреть прошлые слова\n3 - Выйти")
-    start_word = int(input("Введите число: "))  # цифра с меню игры
-    if start_word == 1:  # начало игры
-        game()
-    elif start_word == 2:  # список слов
-        with open('used_words.txt', 'r', encoding='utf-8') as f:
-            line = f.readline()
-        ilne = list(line.strip().split())
-        if len(ilne) == 1:
-            print("Список пуст")
-        else:
-            for i in range(len(ilne)-1):
-                print(ilne[i])
-        if restart_game():
-            menu()
-        else:
-            print('До встречи! Пока!!!')
+    try:
+        print("1 - Начать игру\n2 - Посмотреть прошлые слова\n3 - Выйти")
+        start_word = input("Введите число: ")  # цифра с меню игры
+        if start_word == '1':  # начало игры
+            game()
+        elif start_word == '2':  # список слов
+            with open('used_words.txt', 'r', encoding='utf-8') as f:
+                line = f.readline()
+            ilne = list(line.strip().split())
+            if len(ilne) == 1:
+                print("Список пуст")
+            else:
+                for i in range(len(ilne)-1):
+                    print(ilne[i])
+            if restart_game():
+                menu()
+            else:
+                print('До встречи! Пока!!!')
+                exit_from_game()
+        elif start_word == '3':  # выход из игры
             exit_from_game()
-    elif start_word == 3:  # выход из игры
-        exit_from_game()
-    else:
-        print("Введите нужную цифру")
+        else:
+            print("\nВведите нужную цифру!!!")
+            menu()
+    except ValueError:
+        print("\nВведите нужную цифру!!!")
         menu()
 
 
@@ -51,20 +55,19 @@ def game(attempts=10):
 
         if char in splite_word:
 
-            if char not in used_letters:
+            if char in used_letters:
+                print("Буква уже была использована!!!")
+            elif char not in alphabet1:
+                print("Введите букву русского алфавита!!!")
+            else:
                 for index, value in enumerate(splite_word):  # цикл  изменения _ на букву
                     if value == char:
                         guessed[index] = char
-            elif char not in alphabet:
-                print("Введите букву русского алфавита!!!")
-                continue
-            else:
-                print("Буква уже была использована!!!")
-                continue
-        elif char not in alphabet:
+                        used_letters.add(char)
+        elif char not in alphabet1:
             print("Введите букву русского алфавита!!!")
+            print("\nИспользованные буквы: " + ' '.join(used_letters))
             continue
-
         else:
             attempts -= 1  # уменьшение кол-ва попыток
         used_letters.add(char)  # добавление буквы в множество использованных букв
@@ -74,6 +77,7 @@ def game(attempts=10):
 
         if attempts == 0:  # условие поражения
             print('Вы проиграли!!!')
+            print("Загаданное слово: " + (''.join(splite_word)))
             if restart_game():
                 menu()
             else:
@@ -101,6 +105,7 @@ def add_word(some_word):
 
 
 alphabet = list(map(chr, range(ord('а'), ord('я')+1)))  # для отображения букв
+alphabet1 = list(map(chr, range(ord('а'), ord('я')+1)))  # для отображения букв
 word = random_word()  # результат метода random_word
 used_words = []
 used_words.append(word)  # добавление использованых слов в список
