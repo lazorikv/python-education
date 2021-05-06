@@ -1,8 +1,8 @@
-"""Реализация класса Transport"""
+"""Implementation of the Transport class"""
 
 
 class Transport:
-    """Родительский класс Transport имеет 2 атрибута name(название) и power(мощность двигателя)"""
+    """The parent Transport class has 2 attributes name and power"""
     steering_wheel = True
 
     def __init__(self, name, power):
@@ -10,86 +10,139 @@ class Transport:
         self.power = power
 
     def name_of_transport(self):
-        """Метод выводит название транспорта"""
-        print(f"У меня - {self.name}")
+        """Method displays the name of the transport"""
+        print(f"I have - {self.name}")
 
     def fuel(self):
-        """Вид заправляемого топлива"""
-        print(f"Заправьте мой {self.name} топливом")
+        """Type of fuel to be refueled"""
+        print(f"Refuel my {self.name}")
 
     def power_rate(self):
-        """Метод выводит количество лошадиных сил двигателся"""
-        print(f"Мой {self.name} имеет {self.power} сил")
+        """The method displays the amount of horsepower the engine has been driving."""
+        print(f"My {self.name} has {self.power} hp")
 
     @staticmethod
     def start():
-        """Статический метод. метод реализует гипотетический запуск двигателя"""
-        print("Транспорт завелся")
+        """Static method. Method implements a hypothetical engine start"""
+        print("Transport started")
 
 
 class Auto(Transport):
-    """Дочерний класс описывает объект - автомобиль"""
+    """The child class describes an object - a car"""
+    _fuel_tank = 40
+    __max_distance = 500
+
     def __init__(self, name, power, model):
         Transport.__init__(self, name, power)
         self.model = model
 
+    def fuel_consumption(self):
+        """Fuel consumption per 100 km"""
+        return self._fuel_tank*100/self.__max_distance
+
     def info(self):
-        """Выводит информацию о автомобиле"""
-        print(f"У меня {self.name} {self.name}, которая имеет {self.power} сил")
+        """Displays information about car"""
+        print(f"I have {self.name} {self.model}, which has {self.power} hp")
 
     def fuel(self):
-        print(f"Заправьте мой {self.name} бензином")
+        print(f"Fill my {self.name}  with gasoline")
 
 
 class Sportcar(Auto):
-    """Дочерний класс описывает объект - спорткар. Родительский класс - Auto"""
+    """Derived class describes an object - a sports car. Base class - Auto"""
     def __init__(self, name, model, power, year):
         Auto.__init__(self, name, power, model)
         self.year = year
 
     def time_for_100(self):
-        """Выводит время достижения спорткаром скорости 100 км/ч"""
-        print(f"Мой {self.name} {self.model} {self.year} "
-              f"года до 100 км/ч разгоняется за 3.7 секунд")
+        """Displays the time the sports car reached 100 km/h"""
+        print(f"My {self.name} {self.model} {self.year} "
+              f"realise accelerates to 100 km/h in 3.7 seconds")
 
 
 class Bus(Transport):
-    """Дочерний класс описывает объект - автобус"""
+    """Derived class describes the object - bus"""
     def __init__(self, name, power, persons):
         super().__init__(name, power)
         self.persons = persons
 
     def fuel(self):
-        """Переопределние родительского метода fuel"""
-        print(f"Заправьте мой {self.name} дизелем")
+        """Override base method "fuel" """
+        print(f"Fill my {self.name} with diesel")
 
     def person_inside(self):
-        """Информация о кол-ве возможных пассажиров"""
-        print(f"Моя {self.name} может перевести {self.persons} человек")
+        """Information about the number of possible passengers"""
+        print(f"My {self.name} can carry {self.persons} persons")
 
 
 class Trolleybus(Transport):
-    """Дочерний класс описывает объект - тролейбус"""
+    """Derived class describes an object - a trolleybus"""
     def __init__(self, name, power, cycle_charge):
         super().__init__(name, power)
         self.cycle_charge = cycle_charge
 
     def fuel(self):
-        """Переопределние родительского метода fuel"""
-        print(f"Заправьте мой {self.name} электричеством")
+        """Override base method "fuel" """
+        print(f"Fill my {self.name} with electricity")
 
     def cost(self):
-        """Стоимость заряда троллейбуса с аккумуляторами в день.
-        Стоимость цикла заряда * на кол-во циклов заряда"""
+        """The cost of charging a trolleybus with batteries per day.
+        Charge cycle cost * per number of charge cycles """
         cost_cycle = 40
         return cost_cycle * self.cycle_charge
 
 
 class Tram(Transport):
-    """Дочерний класс описывает объект - автомобиль"""
+    """Derived class describes an object - tram"""
     def fuel(self):
-        """Переопределние родительского метода fuel"""
-        print(f"Заправьте мой {self.name} электричеством")
+        """Override base method "fuel" """
+        print(f"Fill my {self.name} with electricity")
+
+
+class Engine:
+    """Class describing the object - engine"""
+    def __init__(self, type_eng, volume):
+        self.type_eng = str(type_eng)
+        self.volume = volume
+
+    def transport_tax(self):
+        """Method for determining payment of tax"""
+        if self.type_eng == 'бензин' and self.volume >= 3:
+            return True
+        elif self.type_eng == 'дизель' and self.volume >= 2.5:
+            return True
+        else:
+            return False
+
+
+class Tax(Engine, Auto):
+    """Car tax class"""
+    def __init__(self, name, power, model, type_eng, volume):
+        Engine.__init__(self, type_eng, volume)
+        Auto.__init__(self, name, power, model)
+    # Tale names of cars from file list_of models.txt
+    with open('list_of_models.txt', 'r') as file_text:
+        list_of_names = file_text.read().strip().split(', ')
+    tax_cost = 5000
+
+    def tax(self):
+        """Information about your tax"""
+        if self.name in self.list_of_names:
+            if self.transport_tax():
+                print(f"Pay {self.tax_cost} грн USA!!!")
+
+            else:
+                print("You don`t pay much tax))")
+        else:
+            print("You don`t pay tax, congrats")
+
+    def info_tax(self):
+        """Information about you"""
+        self.info()
+        if self.transport_tax():
+            print("\nAnd i pay tax")
+        else:
+            print("\nAnd i don`t pay tax")
 
 
 mers = Auto('Мерседес', 500, "c300")
@@ -116,6 +169,23 @@ mclaren.power_rate()
 mclaren.start()
 mclaren.info()
 mclaren.time_for_100()
+print(mclaren.name)
+print(mclaren.fuel_consumption())
+print(mclaren._fuel_tank)  # protected attribute
+
+my_car = Tax('BMW', 700, 'M8', 'бензин', 5)
+my_car.tax()
+print(my_car.name)
+
+my_new_car = Tax("ВАЗ", 80, "2107", 'бензин', 1.6)
+my_new_car.tax()
+my_new_car.info()
+
+#  Private attribute
+try:
+    print(mers.__max_distance)
+except AttributeError:
+    print('__max_distance is a private attribute.')
 
 if mclaren.steering_wheel:
-    print(f"Транспорт {mclaren.name} с рулем")
+    print(f"Transport {mclaren.name} with a wheel")
