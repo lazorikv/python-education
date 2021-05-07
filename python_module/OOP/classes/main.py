@@ -9,6 +9,20 @@ class Transport:
         self.name = name
         self.power = power
 
+    def __getattr__(self, attr):
+        """Method informs about the absence of an attribute"""
+        return print(f'Attribute "{attr}" does not exist')
+
+    def __gt__(self, other):
+        """Return True if hp 1 object greater than hp 2 object"""
+        if self.power > other.power:
+            return True
+
+    def __ne__(self, other):
+        """Return True if hp 1 object no equal hp 2 object"""
+        if self.power != other.power:
+            return True
+
     def name_of_transport(self):
         """Method displays the name of the transport"""
         print(f"I have - {self.name}")
@@ -26,6 +40,10 @@ class Transport:
         """Static method. Method implements a hypothetical engine start"""
         print("Transport started")
 
+    @property
+    def information(self):
+        return f"{self.name}, {self.power}"
+
 
 class Auto(Transport):
     """The child class describes an object - a car"""
@@ -35,6 +53,20 @@ class Auto(Transport):
     def __init__(self, name, power, model):
         Transport.__init__(self, name, power)
         self.model = model
+
+    def __add__(self, other):
+        """Override magic method __add__. Instrument for concatenate 2 cars"""
+        car_park = []
+        car_park.append(self.name)
+        car_park.append(other.name)
+        return car_park
+
+    def __eq__(self, other):
+        """Method compares object classes"""
+        if isinstance(self, Auto) == isinstance(other, Auto):
+            return True
+        else:
+            return False
 
     def fuel_consumption(self):
         """Fuel consumption per 100 km"""
@@ -98,12 +130,18 @@ class Tram(Transport):
         """Override base method "fuel" """
         print(f"Fill my {self.name} with electricity")
 
+    @classmethod
+    def method(cls, arg):
+        """Return information about your enter and class"""
+        print(f'This is class - {cls.__name__}'
+              f'\nAs an argument you entered: {arg} ')
+
 
 class Engine:
     """Class describing the object - engine"""
-    def __init__(self, type_eng, volume):
+    def __init__(self, type_eng, volume=1):
         self.type_eng = str(type_eng)
-        self.volume = volume
+        self.set_volume(volume)
 
     def transport_tax(self):
         """Method for determining payment of tax"""
@@ -113,6 +151,16 @@ class Engine:
             return True
         else:
             return False
+
+    # getter method
+    def get_volume(self):
+        return self.volume
+
+    # setter method
+    def set_volume(self, value):
+        if value > 6:
+            raise ValueError('Entered volume unbelievable')
+        self.volume = value
 
 
 class Tax(Engine, Auto):
@@ -148,8 +196,20 @@ class Tax(Engine, Auto):
 mers = Auto('Мерседес', 500, "c300")
 mers.fuel()
 mers.info()
+bmw = Auto('BMW', 600, 'm5')
+audi = Auto('Audi', 300, 'a6')
+garage = bmw + mers
+a = mers + audi
+print(a)
+bmw.yerl # example of using magic method __getattr__
+print(bmw > mers)
+print(audi != mers)
 
 bogdan = Bus('27', 400, 40)
+print(audi == bogdan)
+Tram.method(3)
+
+
 bogdan.fuel()
 bogdan.start()
 bogdan.person_inside()
@@ -177,7 +237,7 @@ my_car = Tax('BMW', 700, 'M8', 'бензин', 5)
 my_car.tax()
 print(my_car.name)
 
-my_new_car = Tax("ВАЗ", 80, "2107", 'бензин', 1.6)
+my_new_car = Tax("ВАЗ", 80, "2107", 'бензин', 2)
 my_new_car.tax()
 my_new_car.info()
 
@@ -189,3 +249,9 @@ except AttributeError:
 
 if mclaren.steering_wheel:
     print(f"Transport {mclaren.name} with a wheel")
+
+print(f"Information about transport: {my_car.information}")
+
+my_new_car.set_volume(7)  # example of using getter and setter
+
+
