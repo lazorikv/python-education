@@ -1,4 +1,5 @@
 """Implementation of the Transport class"""
+from abc import ABC, abstractmethod
 
 
 class Transport:
@@ -9,9 +10,7 @@ class Transport:
         self.name = name
         self.power = power
 
-    def __getattr__(self, attr):
-        """Method informs about the absence of an attribute"""
-        return print(f'Attribute "{attr}" does not exist')
+
 
     def __gt__(self, other):
         """Return True if hp 1 object greater than hp 2 object"""
@@ -44,8 +43,14 @@ class Transport:
     def information(self):
         return f"{self.name}, {self.power}"
 
+class Driver(ABC):
 
-class Auto(Transport):
+    @abstractmethod
+    def get_license(self):
+        pass
+
+
+class Auto(Transport, Driver):
     """The child class describes an object - a car"""
     _fuel_tank = 40
     __max_distance = 500
@@ -79,6 +84,9 @@ class Auto(Transport):
     def fuel(self):
         print(f"Fill my {self.name}  with gasoline")
 
+    def get_license(self):
+        print("I get drivers license")
+
 
 class Sportcar(Auto):
     """Derived class describes an object - a sports car. Base class - Auto"""
@@ -86,13 +94,17 @@ class Sportcar(Auto):
         Auto.__init__(self, name, power, model)
         self.year = year
 
+    def __getattr__(self, attr):
+        """Method informs about the absence of an attribute"""
+        return print(f'Attribute "{attr}" does not exist')
+
     def time_for_100(self):
         """Displays the time the sports car reached 100 km/h"""
         print(f"My {self.name} {self.model} {self.year} "
               f"realise accelerates to 100 km/h in 3.7 seconds")
 
 
-class Bus(Transport):
+class Bus(Transport, Driver):
     """Derived class describes the object - bus"""
     def __init__(self, name, power, persons):
         super().__init__(name, power)
@@ -106,8 +118,11 @@ class Bus(Transport):
         """Information about the number of possible passengers"""
         print(f"My {self.name} can carry {self.persons} persons")
 
+    def get_license(self):
+        print("I get drivers license")
 
-class Trolleybus(Transport):
+
+class Trolleybus(Transport, Driver):
     """Derived class describes an object - a trolleybus"""
     def __init__(self, name, power, cycle_charge):
         super().__init__(name, power)
@@ -123,8 +138,11 @@ class Trolleybus(Transport):
         cost_cycle = 40
         return cost_cycle * self.cycle_charge
 
+    def get_license(self):
+        print("I get drivers license")
 
-class Tram(Transport):
+
+class Tram(Transport, Driver):
     """Derived class describes an object - tram"""
     def fuel(self):
         """Override base method "fuel" """
@@ -135,6 +153,9 @@ class Tram(Transport):
         """Return information about your enter and class"""
         print(f'This is class - {cls.__name__}'
               f'\nAs an argument you entered: {arg} ')
+
+    def get_license(self):
+        print("I get drivers license")
 
 
 class Engine:
@@ -193,6 +214,13 @@ class Tax(Engine, Auto):
             print("\nAnd i don`t pay tax")
 
 
+
+
+
+
+
+
+
 mers = Auto('Мерседес', 500, "c300")
 mers.fuel()
 mers.info()
@@ -201,7 +229,6 @@ audi = Auto('Audi', 300, 'a6')
 garage = bmw + mers
 a = mers + audi
 print(a)
-bmw.yerl # example of using magic method __getattr__
 print(bmw > mers)
 print(audi != mers)
 
@@ -232,7 +259,7 @@ mclaren.time_for_100()
 print(mclaren.name)
 print(mclaren.fuel_consumption())
 print(mclaren._fuel_tank)  # protected attribute
-
+mclaren.yerl # example of using magic method __getattr__
 my_car = Tax('BMW', 700, 'M8', 'бензин', 5)
 my_car.tax()
 print(my_car.name)
@@ -240,6 +267,7 @@ print(my_car.name)
 my_new_car = Tax("ВАЗ", 80, "2107", 'бензин', 2)
 my_new_car.tax()
 my_new_car.info()
+my_new_car.get_license()
 
 #  Private attribute
 try:
