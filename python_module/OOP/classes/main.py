@@ -1,4 +1,5 @@
 """Implementation of the Transport class"""
+from abc import ABC, abstractmethod
 
 
 class Transport:
@@ -8,6 +9,18 @@ class Transport:
     def __init__(self, name, power):
         self.name = name
         self.power = power
+
+
+
+    def __gt__(self, other):
+        """Return True if hp 1 object greater than hp 2 object"""
+        if self.power > other.power:
+            return True
+
+    def __ne__(self, other):
+        """Return True if hp 1 object no equal hp 2 object"""
+        if self.power != other.power:
+            return True
 
     def name_of_transport(self):
         """Method displays the name of the transport"""
@@ -26,8 +39,18 @@ class Transport:
         """Static method. Method implements a hypothetical engine start"""
         print("Transport started")
 
+    @property
+    def information(self):
+        return f"{self.name}, {self.power}"
 
-class Auto(Transport):
+class Driver(ABC):
+
+    @abstractmethod
+    def get_license(self):
+        pass
+
+
+class Auto(Transport, Driver):
     """The child class describes an object - a car"""
     _fuel_tank = 40
     __max_distance = 500
@@ -35,6 +58,20 @@ class Auto(Transport):
     def __init__(self, name, power, model):
         Transport.__init__(self, name, power)
         self.model = model
+
+    def __add__(self, other):
+        """Override magic method __add__. Instrument for concatenate 2 cars"""
+        car_park = []
+        car_park.append(self.name)
+        car_park.append(other.name)
+        return car_park
+
+    def __eq__(self, other):
+        """Method compares object classes"""
+        if isinstance(self, Auto) == isinstance(other, Auto):
+            return True
+        else:
+            return False
 
     def fuel_consumption(self):
         """Fuel consumption per 100 km"""
@@ -47,6 +84,9 @@ class Auto(Transport):
     def fuel(self):
         print(f"Fill my {self.name}  with gasoline")
 
+    def get_license(self):
+        print("I get drivers license")
+
 
 class Sportcar(Auto):
     """Derived class describes an object - a sports car. Base class - Auto"""
@@ -54,13 +94,17 @@ class Sportcar(Auto):
         Auto.__init__(self, name, power, model)
         self.year = year
 
+    def __getattr__(self, attr):
+        """Method informs about the absence of an attribute"""
+        return print(f'Attribute "{attr}" does not exist')
+
     def time_for_100(self):
         """Displays the time the sports car reached 100 km/h"""
         print(f"My {self.name} {self.model} {self.year} "
               f"realise accelerates to 100 km/h in 3.7 seconds")
 
 
-class Bus(Transport):
+class Bus(Transport, Driver):
     """Derived class describes the object - bus"""
     def __init__(self, name, power, persons):
         super().__init__(name, power)
@@ -74,8 +118,11 @@ class Bus(Transport):
         """Information about the number of possible passengers"""
         print(f"My {self.name} can carry {self.persons} persons")
 
+    def get_license(self):
+        print("I get drivers license")
 
-class Trolleybus(Transport):
+
+class Trolleybus(Transport, Driver):
     """Derived class describes an object - a trolleybus"""
     def __init__(self, name, power, cycle_charge):
         super().__init__(name, power)
@@ -91,19 +138,31 @@ class Trolleybus(Transport):
         cost_cycle = 40
         return cost_cycle * self.cycle_charge
 
+    def get_license(self):
+        print("I get drivers license")
 
-class Tram(Transport):
+
+class Tram(Transport, Driver):
     """Derived class describes an object - tram"""
     def fuel(self):
         """Override base method "fuel" """
         print(f"Fill my {self.name} with electricity")
 
+    @classmethod
+    def method(cls, arg):
+        """Return information about your enter and class"""
+        print(f'This is class - {cls.__name__}'
+              f'\nAs an argument you entered: {arg} ')
+
+    def get_license(self):
+        print("I get drivers license")
+
 
 class Engine:
     """Class describing the object - engine"""
-    def __init__(self, type_eng, volume):
+    def __init__(self, type_eng, volume=1):
         self.type_eng = str(type_eng)
-        self.volume = volume
+        self.set_volume(volume)
 
     def transport_tax(self):
         """Method for determining payment of tax"""
@@ -113,6 +172,16 @@ class Engine:
             return True
         else:
             return False
+
+    # getter method
+    def get_volume(self):
+        return self.volume
+
+    # setter method
+    def set_volume(self, value):
+        if value > 6:
+            raise ValueError('Entered volume unbelievable')
+        self.volume = value
 
 
 class Tax(Engine, Auto):
@@ -145,11 +214,29 @@ class Tax(Engine, Auto):
             print("\nAnd i don`t pay tax")
 
 
+
+
+
+
+
+
+
 mers = Auto('Мерседес', 500, "c300")
 mers.fuel()
 mers.info()
+bmw = Auto('BMW', 600, 'm5')
+audi = Auto('Audi', 300, 'a6')
+garage = bmw + mers
+a = mers + audi
+print(a)
+print(bmw > mers)
+print(audi != mers)
 
 bogdan = Bus('27', 400, 40)
+print(audi == bogdan)
+Tram.method(3)
+
+
 bogdan.fuel()
 bogdan.start()
 bogdan.person_inside()
@@ -172,14 +259,15 @@ mclaren.time_for_100()
 print(mclaren.name)
 print(mclaren.fuel_consumption())
 print(mclaren._fuel_tank)  # protected attribute
-
+mclaren.yerl # example of using magic method __getattr__
 my_car = Tax('BMW', 700, 'M8', 'бензин', 5)
 my_car.tax()
 print(my_car.name)
 
-my_new_car = Tax("ВАЗ", 80, "2107", 'бензин', 1.6)
+my_new_car = Tax("ВАЗ", 80, "2107", 'бензин', 2)
 my_new_car.tax()
 my_new_car.info()
+my_new_car.get_license()
 
 #  Private attribute
 try:
@@ -189,3 +277,9 @@ except AttributeError:
 
 if mclaren.steering_wheel:
     print(f"Transport {mclaren.name} with a wheel")
+
+print(f"Information about transport: {my_car.information}")
+
+my_new_car.set_volume(7)  # example of using getter and setter
+
+
