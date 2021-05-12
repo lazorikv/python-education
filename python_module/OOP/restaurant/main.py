@@ -11,11 +11,20 @@ class Restaurant:
 
 class Person(Restaurant):
     """Base class for persons in restaurant"""
+    def __init__(self, name, age, gender):
+        self.name = name
+        self.age = age
+        self.gender = gender
 
 
 class Instruments(Restaurant):
     """Base class for restaurant instruments"""
-    pass
+
+    @property
+    def product_material(self):
+        """Return product material of instruments"""
+        instr_material = 'paper'
+        return instr_material
 
 
 class Order(Instruments):
@@ -44,8 +53,22 @@ class Menu(Instruments):
     @staticmethod
     def show_items():
         with open('menu.txt', 'r') as file:
-            menu = file.read().strip().split(', ')
-        return print('\n'.join(menu))
+            rest_menu = file.read().strip().split(', ')
+        return print('\n'.join(rest_menu))
+
+    @staticmethod
+    def set_date(date):
+        """Set date of creating menu"""
+        with open('date_of_menu.txt', 'w') as file:
+            file.write(date)
+        return print('Menu creation date set')
+
+    @staticmethod
+    def get_date():
+        """Get last date of creating menu"""
+        with open('date_of_menu.txt', 'r') as file:
+            data = file.read()
+        return data
 
 
 class Bill(Instruments):
@@ -85,8 +108,11 @@ class Bill(Instruments):
 class Bookkeeper(Bill, Person):
     """Realized person - Bookkeeper"""
 
-    def __init__(self, some_list):
+    def __init__(self, some_list, name, age, gender):
         Bill.__init__(self, some_list)
+        self.name = name
+        self.age = age
+        self.gender = gender
 
     _tax = 0.18  # NDS
 
@@ -99,6 +125,9 @@ class Cook(Person):
     """Derived class from base Person. Realised cooking food"""
     time_cooking: float = 20.5
 
+    def __init__(self, name, age, gender):
+        super(Cook, self).__init__(name, age, gender)
+
     def cook_food(self, some_food):
         """Realised process cooking"""
         print("Food is cooking")
@@ -106,11 +135,14 @@ class Cook(Person):
         for key in some_food:
             print(f"Cooking: {key}")
             time.sleep(2)
-        print(f"Done. Your dishes were cooked - {self.time_cooking} minutes")
+        print(f"Done. Dishes were cooked - {self.time_cooking} minutes")
         return True
 
 
 class Wardrobe(Person):
+
+    def __init__(self, name, age, gender):
+        super(Wardrobe, self).__init__(name, age, gender)
 
     _num_of_place: int = 50 # count of places for clothes
 
@@ -127,12 +159,23 @@ class Wardrobe(Person):
 class Administrator(Menu, Person):
     """Realized person - Administrator"""
 
+    def __init__(self, name, age, gender, shift):
+        super(Administrator, self).__init__(name, age, gender)
+        self.shift = shift
+
+    def shift_payment(self):
+        """the method checks in which shift the administrator works and in the case of
+        3 or 4 shifts, increases the salary by 1.5 times"""
+        if self.shift == 3 or self.shift == 4:
+            print('Your payment for this shift is increased by 1.5 times')
+
     @staticmethod
     def call_waiter():
         """Method call waiter"""
         return True
 
     def give_menu(self):
+        """Method give menu"""
         print("Here is your menu, please")
         self.show_items()
 
@@ -141,10 +184,12 @@ class Waiter(Person):
 
     @staticmethod
     def take_order(some_food):
+        """Method take order from a client"""
         print("Thanks for order.\nYour order: " + ' '.join(some_food))
 
     @staticmethod
     def give_dishes(cook_food):
+        """Give dishes to client"""
         if cook_food:
             print('Bon Appetit!')
         else:
@@ -152,6 +197,7 @@ class Waiter(Person):
 
     @staticmethod
     def bill(give_bill):
+        """Give bill to client"""
         print(f"That`s your bill: {give_bill}$")
         return True
 
@@ -165,18 +211,20 @@ class Deliver(Person):
 
     @staticmethod
     def give_food(dishes):
+        """Driver give food to client"""
         Waiter.give_dishes(dishes)
 
     @staticmethod
     def bill(order_bill):
+        """Driver give bill to client"""
         Waiter.bill(order_bill)
 
 
 galina = Restaurant
-main_person = Wardrobe()
+main_person = Wardrobe('Alise', 20, 'female')
 main_person.take_clothes(4)
-admin = Administrator
-print('This is our menu: ')
+admin = Administrator('Milla', 30, 'female', 4)
+admin.shift_payment()
 admin.show_items()
 if admin.call_waiter():
     print('I will call the waiter now')
@@ -188,7 +236,7 @@ new_order = Order(list_food)
 new_order.place_an_order(list_food)
 print("...This is order for cook...")
 new_order.inform_kitchen()
-john = Cook()
+john = Cook('Andrey', 55, 'male')
 print('...Cooking stage...')
 john.cook_food(list_food)
 print('...Waiter brought the food...')
@@ -197,7 +245,7 @@ print('...Client ate...')
 bill_for_order = Bill(list_food)
 print('...Bill for client...')
 sam.bill(bill_for_order.inform_client())
-bookkeeper = Bookkeeper(list_food)
+bookkeeper = Bookkeeper(list_food, 'Gala', 67, 'female')
 print('...Bookkeeper generate report...')
 bookkeeper.generate_report()
 order = 'delivery'
@@ -211,6 +259,9 @@ if order == 'delivery':
     print('...Deliveryman give bill...')
     jack.bill(bill_for_order.inform_client())
 
+menu = Menu
+menu.set_date('15.09.2021')
+menu.get_date()
 
 
 
