@@ -9,7 +9,7 @@ class Restaurant:
     __name = "Galina"
 
 
-class Person(Restaurant):
+class Person:
     """Base class for persons in restaurant"""
     def __init__(self, name, age, gender):
         self.name = name
@@ -208,16 +208,19 @@ class Deliver(Person):
     def drive():
         """Driver deliver order"""
         time.sleep(5)
+        return True
 
     @staticmethod
     def give_food(dishes):
         """Driver give food to client"""
         Waiter.give_dishes(dishes)
+        return True
 
     @staticmethod
     def bill(order_bill):
         """Driver give bill to client"""
         Waiter.bill(order_bill)
+        return True
 
 
 galina = Restaurant
