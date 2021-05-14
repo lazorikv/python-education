@@ -1,2 +1,8 @@
-./.idea
-/venv
+# Folders
+venv/
+.idea/
+pycache/
+logs/
+
+# Files
+.env
