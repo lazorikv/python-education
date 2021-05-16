@@ -55,7 +55,8 @@ class Sentence:
     @property
     def other_chars(self):
         """returns a list of all 'no words' in sentence"""
-        return [letter for i, letter in enumerate(self.text) if letter in ch or letter.isdigit()]
+        # return [, letter in enumerate(self.text) if letter in ch or letter.isdigit()]
+        return [letter for letter in re.findall("[\W]", self.text) if letter != ' ']
 
 
 c = Sentence('While, there^ are: 2 spaces; between words in our string.')
