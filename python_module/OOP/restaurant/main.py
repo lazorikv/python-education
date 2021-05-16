@@ -122,20 +122,37 @@ class Bookkeeper(Bill, Person):
 
 
 class Cook(Person):
-    """Derived class from base Person. Realised cooking food"""
-    time_cooking: float = 20.5
-
+    """Persons on kitchen"""
     def __init__(self, name, age, gender):
         super(Cook, self).__init__(name, age, gender)
+        self.time_cook = 3
+
+    def job(self):
+        """Reduces the overall cooking time"""
+        return self.time_cook
+
+
+class Kitchen(Restaurant):
+    """Derived class from base Restaurant. Realised cooking food"""
+    time_cooking: float = 20.5
+
+    def __init__(self):
+        self.persons = []
+
+    def addperson(self, name, age, gender):
+        """Add person for cooking`"""
+        self.persons.append(Cook(name, age, gender))
 
     def cook_food(self, some_food):
         """Realised process cooking"""
         print("Food is cooking")
-
+        new_time_cooking = self.time_cooking
+        for i in self.persons:
+            new_time_cooking -= i.job()
         for key in some_food:
             print(f"Cooking: {key}")
             time.sleep(2)
-        print(f"Done. Dishes were cooked - {self.time_cooking} minutes")
+        print(f"Done. Dishes were cooked - {new_time_cooking} minutes")
         return True
 
 
@@ -144,7 +161,7 @@ class Wardrobe(Person):
     def __init__(self, name, age, gender):
         super(Wardrobe, self).__init__(name, age, gender)
 
-    _num_of_place: int = 50 # count of places for clothes
+    _num_of_place: int = 50  # count of places for clothes
 
     def take_clothes(self, count):
         if self._num_of_place != 0:
@@ -239,9 +256,10 @@ new_order = Order(list_food)
 new_order.place_an_order(list_food)
 print("...This is order for cook...")
 new_order.inform_kitchen()
-john = Cook('Andrey', 55, 'male')
+kitchen = Kitchen()
+kitchen.addperson('Andrey', 55, 'male')
 print('...Cooking stage...')
-john.cook_food(list_food)
+kitchen.cook_food(list_food)
 print('...Waiter brought the food...')
 sam.give_dishes(cook_food=True)
 print('...Client ate...')
@@ -265,14 +283,3 @@ if order == 'delivery':
 menu = Menu
 menu.set_date('15.09.2021')
 menu.get_date()
-
-
-
-
-
-
-
-
-
-
-
