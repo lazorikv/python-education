@@ -2,6 +2,7 @@
 and an iterator class"""
 
 import re
+import string
 end_point = ['.', '!', '?']  # chars to check for completeness of a string
 ch = [',', ':', ';', '!', '?', '^']  # chars to sample chars from a string
 
@@ -56,7 +57,7 @@ class Sentence:
     def other_chars(self):
         """returns a list of all 'no words' in sentence"""
         # return [, letter in enumerate(self.text) if letter in ch or letter.isdigit()]
-        return [letter for letter in re.findall("[\W]", self.text) if letter != ' ']
+        return [char for char in self.text if char in string.punctuation]
 
 
 c = Sentence('While, there^ are: 2 spaces; between words in our string.')
