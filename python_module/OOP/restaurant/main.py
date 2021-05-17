@@ -34,6 +34,7 @@ class Order(Instruments):
 
     @staticmethod
     def place_an_order(some_dishes):
+        """The method forms the appearance of the order"""
         counter = {}
         print(str(time_order))
         for elem in some_dishes:
@@ -44,6 +45,7 @@ class Order(Instruments):
             print(f'{key}: {value}')
 
     def inform_kitchen(self):
+        """Method inform kitchen in restaurant"""
         print('There is an order!!!')
         self.place_an_order(self.some_food)
 
@@ -52,6 +54,7 @@ class Menu(Instruments):
     """Derived class from base class Instruments. Realized Menu"""
     @staticmethod
     def show_items():
+        """Show to client list of dishes"""
         with open('menu.txt', 'r') as file:
             rest_menu = file.read().strip().split(', ')
         return print('\n'.join(rest_menu))
@@ -118,7 +121,8 @@ class Bookkeeper(Bill, Person):
 
     def generate_report(self):
         """Report from bookkeeper"""
-        return print(f'The restaurant received {self._bill_rest() - int(self.inform_bookkeeping() * self._tax)}$')
+        return print(f'The restaurant received '
+                     f'{self._bill_rest() - int(self.inform_bookkeeping() * self._tax)}$')
 
 
 class Cook(Person):
@@ -157,13 +161,14 @@ class Kitchen(Restaurant):
 
 
 class Wardrobe(Person):
-
+    """Realized Wardrobe in restaurant"""
     def __init__(self, name, age, gender):
         super(Wardrobe, self).__init__(name, age, gender)
 
     _num_of_place: int = 50  # count of places for clothes
 
     def take_clothes(self, count):
+        """Realized taking clothes process"""
         if self._num_of_place != 0:
             self._num_of_place -= count
             print("Good evening!")
@@ -174,7 +179,7 @@ class Wardrobe(Person):
 
 
 class Administrator(Menu, Person):
-    """Realized person - Administrator"""
+    """Implements person - Administrator"""
 
     def __init__(self, name, age, gender, shift):
         super(Administrator, self).__init__(name, age, gender)
@@ -198,7 +203,7 @@ class Administrator(Menu, Person):
 
 
 class Waiter(Person):
-
+    """Implements a waiter in a restaurant"""
     @staticmethod
     def take_order(some_food):
         """Method take order from a client"""
@@ -220,7 +225,7 @@ class Waiter(Person):
 
 
 class Deliver(Person):
-
+    """Implements Deliver in restaurant"""
     @staticmethod
     def drive():
         """Driver deliver order"""
