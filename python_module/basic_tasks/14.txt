@@ -1,0 +1,11 @@
+"""Find function which contained word "find", 
+   alphabetically sorted and print""" 
+
+import re
+
+list_of_words = []
+
+for member in dir(re):
+    if "find" in member:
+        list_of_words.append(member)
+print(list_of_words) 
