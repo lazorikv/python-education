@@ -1,0 +1,17 @@
+"""Appanding 1, 2, 3 in list numbers and 
+"Eric" in second_name"""
+
+numbers = []
+strings = []
+names = ["John", "Eric", "Jessica"]
+
+# write your code here
+s = {1, 2, 3}
+numbers.append(s)
+second_name = names[1]
+
+
+# this code should write out the filled arrays and the second name in the names list (Eric).
+print(numbers)
+print(strings)
+print("The second name on the names list is %s" % second_name)
