@@ -131,7 +131,8 @@ def main(s_board):
             tmp = check_win(s_board)
             if tmp:
                 print(sm_dict[str(tmp)], "выиграл!")
-                logging.debug(f'Победил - {sm_dict[str(tmp)]}, который ставил - {tmp}')
+                logging.debug(f'Winner - {sm_dict[str(tmp)]}, who put'
+                              f' - {tmp}')
                 win = True
                 board = list(range(1, 10))
                 restart_game(tmp)
