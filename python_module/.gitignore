@@ -1,3 +1,5 @@
+
+/.coverage
 # Folders
 venv/
 .idea/
@@ -6,4 +8,4 @@ logs/
 
 # Files
 .env
-/.coverage
+
