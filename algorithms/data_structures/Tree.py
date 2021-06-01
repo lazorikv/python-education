@@ -67,27 +67,6 @@ class Tree:
         else:
             return self.search(node.left, data)
 
-    def traverseInorder(self, t_root):
-        """shows the trunk for all branches"""
-        if t_root is not None:
-            self.traverseInorder(t_root.left)
-            print(t_root.data)
-            self.traverseInorder(t_root.right)
-
-    def traversePreorder(self, p_root):
-        """traverse function will print all tree in order of nesting"""
-        if p_root is not None:
-            print(p_root.data)
-            self.traversePreorder(p_root.left)
-            self.traversePreorder(p_root.right)
-
-    def traversePostorder(self, po_root):
-        """traverse function will print all the node in the tree in reverse order"""
-        if po_root is not None:
-            self.traversePostorder(po_root.left)
-            self.traversePostorder(po_root.right)
-            print(po_root.data)
-
 
 root = None
 tool = None
@@ -101,9 +80,4 @@ custom_tree.insert(root, 700)
 custom_tree.insert(root, 600)
 custom_tree.insert(root, 550)
 custom_tree.insert(root, 800)
-print("Traverse Inorder")
-custom_tree.traverseInorder(root)
-print("Traverse Preorder")
-custom_tree.traversePreorder(root)
-print("Traverse Postorder")
-custom_tree.traversePostorder(root)
+print(custom_tree.search(root, 700))

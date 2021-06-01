@@ -42,10 +42,16 @@ class Stack:
             self.head = self.head.next
             return popped
 
+    def custom_peek(self):
+        """Shows peek of the stack"""
+        return self.head.elem
+
 
 stack = Stack()
 stack.custom_push(Node('oleg'))
 stack.custom_push(Node('igor'))
+stack.custom_push(Node('egor'))
 print(stack)
 stack.custom_pop()
 print(stack)
+print(stack.custom_peek())

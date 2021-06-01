@@ -1,99 +1,107 @@
-"""Module to represent LinkedList"""
-
-
-class Node:
-    """class to represent each node of the linked list"""
-    def __init__(self, elem=None):
-        self.elem = elem
+class LinkedListNode:
+    """This is the class of the linked list node"""
+    def __init__(self, value):
+        self.value = value
         self.next = None
-
-    def __repr__(self):
-        return self.elem
 
 
 class LinkedList:
-    """Class realized methods for LinkedList"""
-    def __init__(self, nodes=None):
+    """This is a linked list class"""
+    def __init__(self):
         self.head = None
-        if nodes is not None:
-            node = Node(elem=nodes.pop(0))
+        self.tail = None
+
+    def __str__(self):
+        curr = self.head
+        string = ''
+        while curr is not None:
+            string += str(curr.value)
+            string += ' -> '
+            curr = curr.next
+        string += 'None'
+        return string
+
+    def is_empty(self):
+        """Checking if a list is empty"""
+        return self.head is None
+
+    def add_last(self, value):
+        """Method for adding a node to the end of the list"""
+        node = LinkedListNode(value)
+        if self.is_empty():
             self.head = node
-            for data in nodes:
-                node.next = Node(elem=data)
-                node = node.next
+            self.tail = node
+        else:
+            self.tail.next = node
+            self.tail = node
 
-    def __repr__(self):
-        node = self.head
-        nodes = []
-        while node is not None:
-            nodes.append(node.elem)
-            node = node.next
-        nodes.append("None")
-        return " -> ".join(nodes)
-
-    def __iter__(self):
-        """traverse linkedlist"""
-        node = self.head
-        while node is not None:
-            yield node
-            node = node.next
-
-    def add_first(self, node):
-        """Insert element to begin of linkedlist"""
-        node.next = self.head
-        self.head = node
-
-    def add_last(self, node):
-        """Insert element to end of linkedlist"""
-        if self.head is None:
+    def add_first(self, value):
+        """Method for adding a node to the beginning of the list"""
+        node = LinkedListNode(value)
+        if self.is_empty():
             self.head = node
-            return
-        for this_node in self:
-            pass
-        this_node.next = node
+            self.tail = node
+        else:
+            node.next = self.head
+            self.head = node
 
-    def search(self, get_elem: int) -> int:
-        """item search by index"""
-        if isinstance(get_elem, int):
-            current = self.head
+    def __len__(self):
+        if self.is_empty():
+            return 0
+        current, ind = self.head, 0
+        while current is not None:
+            current = current.next
+            ind += 1
+        return ind
+
+    def insert(self, index_node, value):
+        """Method for inserting a node with a specified value
+        at a specified index into a list"""
+        if index_node == 0:
+            self.add_first(value)
+        elif index_node == len(self):
+            self.add_last(value)
+        elif 0 < index_node < len(self):
+            node = LinkedListNode(value)
             count = 0
-            while count != get_elem:
+            current = self.head
+            while current:
+                if index_node == count + 1:
+                    node.next = current.next
+                    current.next = node
                 current = current.next
                 count += 1
-            return current.elem
+
+    def search(self, index_node):
+        """The method will return the value of the node at the given index"""
+        if self.is_empty():
+            print("List is empty")
+        current = self.head
+        count = 0
+        while count <= index_node:
+            if count == index_node:
+                return current.value
+            count += 1
+            current = current.next
+
+    def remove_node(self, index_node):
+        """Method for removing a node at a given index from the list"""
+        if index_node < 0:
+            raise ValueError("Value must be positive")
+        if self.is_empty():
+            print("List is empty")
         else:
-            raise ValueError
+            current = self.head
+            prev = None
+            index = 0
+            while index <= index_node:
+                if index == index_node:
+                    if current == self.head:
+                        self.head = current.next
+                    else:
+                        prev.next = current.next
+                    break
+                index += 1
+                prev = current
+                current = current.next
 
-    def remove_node(self, target_node_elem):
-        """Remove element from linkedlist"""
-        if self.head.elem == target_node_elem:
-            self.head = self.head.next
-            return
-
-        prev_node = self.head
-        for node in self:
-            if node.elem == target_node_elem:
-                prev_node.next = node.next
-                return
-            prev_node = node
-
-        if self.head is None:
-            raise Exception("List is empty")
-        raise Exception("Node with data '%s' not found" % target_node_elem)
-
-
-llist = LinkedList()
-first = Node('a')
-second = Node('b')
-zero = Node('0')
-llist.head = first
-first.next = second
-llist.add_first(zero)
-some_llist = LinkedList(["a", "b", "c", "d", "e"])
-for elem in some_llist:
-    print(elem)
-llist.add_last(Node('p'))
-print(f'Index 3 - {some_llist.search(3)}')
-some_llist.remove_node('a')
-print(llist)
-print(some_llist)

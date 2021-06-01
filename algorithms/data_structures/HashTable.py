@@ -1,82 +1,50 @@
-"""Module to represent HashTable"""
+"""This module to implement a hash table"""
+
+from LinkedList import LinkedList
 
 
-class Node:
-    """class to represent each node of the Stack"""
-    def __init__(self, key, value):
-        self.key = key
-        self.value = value
-        self.next = None
+class LinkedListHash(LinkedList):
+    """Custom linkedlist for hash table"""
+
+    def is_value(self, key):
+        """Method for checking the existence of
+        a node with a given value in the list"""
+        current = self.head
+        while current is not None:
+            if current.value[0] == key:
+                return current.value[1]
+            current = current.next
+        return None
 
 
 class HashTable:
-    """Class realized methods for Stack"""
+    """Class implements hashtable with linkedlist"""
     def __init__(self):
-        self.capacity = 30
-        self.size = 0
-        self.buckets = [None] * self.capacity
+        self.size = 6
+        self.table = [LinkedListHash() for _ in range(self.size)]
 
-    def hash(self, key) -> int:
-        """Hash-function"""
-        hashsum = 0
-        for index, c in enumerate(key):
-            hashsum += (index + len(key)) ** ord(c)
-            hashsum = hashsum % self.capacity
-        return hashsum
+    def hash(self, string):
+        """Method implements hashing the data"""
+        return sum(ord(item) for item in string) % self.size
 
-    def insert(self, key, value):
-        """insert a pair of key and value into a hash table"""
-        self.size += 1
-        index = self.hash(key)
-        node = self.buckets[index]
-
-        if node is None:
-            self.buckets[index] = Node(key, value)
-            return
-
-        prev = node
-        while node is not None:
-            prev = node
-            node = node.next
-        prev.next = Node(key, value)
-
-    def find(self, key):
+    def __getitem__(self, string):
         """Find data from hash table"""
-        index = self.hash(key)
-        node = self.buckets[index]
-        while node is not None and node.key != key:
-            node = node.next
-        if node is None:
-            return None
-        else:
-            return node.value
+        return self.table[self.hash(string)].is_value(string)
 
-    def remove(self, key):
-        """Remove data from hash table"""
-        index = self.hash(key)
-        node = self.buckets[index]
-        prev = None
-        while node is not None and node.key != key:
-            prev = node
-            node = node.next
+    def __setitem__(self, string, value):
+        """Add data to the hashtable"""
+        if self[string] is None:
+            self.table[self.hash(string)].add_last((string, value))
 
-        if node is None:
-            return None
-        else:
-            self.size -= 1
-            result = node.value
-            if prev is None:
-                node = None
-            else:
-                prev.next = prev.next.next
-            return result
+    def print_table(self):
+        """Print hashtable"""
+        for elem in self.table:
+            print(str(elem))
 
 
 ht = HashTable()
-phone_numbers = ['0508494944', '05056698489']
-ht.insert("myphonedirectory", phone_numbers)
-phone_numbers = ht.find("myphonedirectory")
-print(phone_numbers)
-
-
-
+ht["Oleg"] = 1
+ht["Vova"] = 2
+ht["Igor"] = 23
+print(ht.hash("Igor"))
+ht.print_table()

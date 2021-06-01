@@ -52,6 +52,10 @@ class Queue:
         self.size -= 1
         return item
 
+    def peek(self):
+        """Shows peek of the queue"""
+        return self.first.item
+
 
 some_queue = Queue()
 some_queue.enqueue(Node('r'))
@@ -60,5 +64,6 @@ some_queue.enqueue(Node('tert'))
 print(some_queue)
 some_queue.dequeue()
 print(some_queue)
+print(some_queue.peek())
 
 
