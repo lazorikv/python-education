@@ -347,21 +347,18 @@ def main():
 
 player1, player2 = Piece().pieces()
 players = Addplayers()
-
-grand = Menu()
-grand.choice()
-sm_dict = {player1: NAME1, player2: NAME2}
-stat = {NAME1: 0, NAME2: 0}
 scores = {
         player1: -100,
         player2: 100,
         'draw': 0
     }
+grand = Menu()
+grand.choice()
+sm_dict = {player1: NAME1, player2: NAME2}
+stat = {NAME1: 0, NAME2: 0}
+
 
 # sm_dict = {player1: NAME1, player2: NAME2}
 # stat = {NAME1: 0, NAME2: 0}  # dict for statistic of the games
-
-
-
 
 input("\n\nPress the enter key to quit.")
