@@ -84,6 +84,17 @@ class LinkedList:
             count += 1
             current = current.next
 
+    def is_value(self, value):
+        """Method for checking the existence of a node with a given value in the list"""
+        if self.is_empty():
+            print("Список пуст")
+        current = self.head
+        while current.value != value:
+            if current.next is None and current.value != value:
+                return False
+            current = current.next
+        return True
+
     def remove_node(self, index_node):
         """Method for removing a node at a given index from the list"""
         if index_node < 0:
