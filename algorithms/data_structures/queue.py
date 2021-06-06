@@ -35,26 +35,34 @@ class Queue:
 
     def enqueue(self, item):
         """Add item to the end of self"""
-        old_last = self.last
-        self.last = Node(item)
+        node = Node(item)
         if self.isEmpty():
-            self.first = self.last
+            self.first = node
+            self.last = node
         else:
-            old_last.next = self.last
-        self.size += 1
+            self.last.next = node
+            self.last = node
 
     def dequeue(self):
         """Remove the first item of self and return it"""
-        item = self.first.item
-        self.first = self.first.next
         if self.isEmpty():
-            self.last = None
-        self.size -= 1
-        return item
+            print("Queue is empty")
+        else:
+            self.first = self.first.next
+        # item = self.first.item
+        # self.first = self.first.next
+        # if self.isEmpty():
+        #     self.last = None
+        # self.size -= 1
+        # return item
 
     def peek(self):
         """Shows peek of the queue"""
         return self.first.item
+
+    def peek_last(self):
+        """Shows last peek of the queue"""
+        return self.last.item
 
 
 some_queue = Queue()

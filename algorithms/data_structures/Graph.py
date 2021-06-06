@@ -25,6 +25,7 @@ class LinkedListGraph(LinkedList):
                     ind += 1
                 current = current.next
 
+
 class Graph:
     """Class realized methods for Graph"""
     def __init__(self):
@@ -78,18 +79,12 @@ class Graph:
         else:
             raise ValueError("No such vertex exists")
 
+    def get_vertex(self, index):
+        return self.vertex.search(index)
 
-some_graph = Graph()
-some_graph.add_vertex(0)
-some_graph.add_vertex(10)
-some_graph.add_vertex(20)
-some_graph.add_vertex(30)
-some_graph.add_vertex(40)
-some_graph.add_edge(30, 10)
-some_graph.add_edge(0, 40)
-some_graph.add_edge(20, 30)
-some_graph.add_edge(0, 10)
-print(some_graph)
-some_graph.delete_vertex(0)
-print(some_graph)
+    def get_edge(self, index):
+        return self.edges.search(index)
+
+
+
 

@@ -85,12 +85,4 @@ class Hashtable:
         print(f"{curr_node.key} -> {curr_node.value}")
 
 
-ht = Hashtable()
-ht.add_item('ukraine', 'kharkiv')
-ht.add_item('ukraine', 'kiev')
-ht.add_item('poland', 'wroclav')
-ht.add_item('belarussia', 'Minsk')
-ht.add_item('belarussia', 'grodno')
-ht.print_table()
-ht.remove('poland')
-ht.print_table()
+
