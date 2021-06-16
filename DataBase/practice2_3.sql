@@ -99,7 +99,7 @@ SELECT user_id, SUM(o.total) FROM users u
 JOIN carts c ON u.user_id = c.cart_id
 JOIN orders o ON o.carts_cart_id = c.cart_id
 JOIN order_status os ON os.order_status_id = o.order_status_order_status_id
-WHERE os.order_status_id IN (1, 2, 3)
+WHERE os.order_status_id IN (3, 4)
 GROUP BY user_id
 ORDER BY sum(o.total) DESC
 LIMIT 5;
@@ -111,8 +111,11 @@ JOIN orders o ON o.carts_cart_id = c.cart_id
 GROUP BY user_id;
 
 /*4.7*/
-SELECT user_id FROM users
-JOIN carts ON user_id = users_user_id
-LEFT JOIN orders ON carts_cart_id = cart_id
-WHERE carts_cart_id is NULL
+SELECT users.user_id, count(c.cart_id) AS cart_count
+FROM users
+         JOIN carts c ON users.user_id = c.users_user_id
+         LEFT JOIN orders o ON c.cart_id = o.carts_cart_id
+WHERE o.order_id IS NULL
+GROUP BY users.user_id
+ORDER BY cart_count DESC
 LIMIT 5;
