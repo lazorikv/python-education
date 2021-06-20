@@ -5,7 +5,7 @@ create table branch(
 );
 ALTER TABLE branch ADD FOREIGN KEY (info_id) REFERENCES info(info_id) on delete cascade;
 
-
+drop table branch cascade;
 /*insert branch*/
 do
 $$
@@ -32,10 +32,10 @@ create table client(
     info_id int,
     first_name varchar(100),
     last_name varchar(100),
-    primary key (client_id),
-    foreign key (info_id)
-                   references info(info_id) on delete cascade
+    primary key (client_id)
 );
+
+ALTER TABLE client ADD FOREIGN KEY (info_id) REFERENCES info(info_id) on delete cascade;
 
 drop table client cascade;
 
@@ -48,7 +48,7 @@ declare counter int := 0;
 begin
      loop
          counter:= counter + 1;
-         exit when counter = 99980;
+         exit when counter = 97931;
      insert into client(info_id, first_name, last_name)
          values (counter + 20, concat('Name ', counter), concat('Surname ', counter));
      end loop;
@@ -64,31 +64,35 @@ create table info(
     town varchar(100),
     address varchar(100),
     telephone int,
-    primary key (info_id),
-
-    foreign key (branch_id)
-                 references branch(branch_number) on delete cascade
+    primary key (info_id)
 );
 
 ALTER TABLE info ADD FOREIGN KEY (client_id) REFERENCES client(client_id) on delete cascade;
-
+ALTER TABLE info ADD FOREIGN KEY (branch_id) REFERENCES branch(branch_number) on delete cascade;
 
 /*insert info*/
 do
 $$
 declare counter int := 0;
-
+counter1 int := 0;
 begin
+    <<first>>
      loop
          counter:= counter + 1;
-         exit when counter = 100000;
+         counter1:= 0;
+         exit when counter = 2000;
+         <<second>>
+         loop
+        counter1:= counter1 + 1;
+        exit when counter1 = 50;
      insert into info(client_id, branch_id, town, address, telephone)
-         values (random()*(50000-1)+1, random()*(20-1)+1, concat('Town ', counter), concat('Address ', counter), counter + 1000);
-     end loop;
+         values (random()*(50000-1)+1, random()*(20-1)+1, concat('Town ', counter1), concat('Address ', counter), counter + 1000 + counter1);
+     end loop second;
+     end loop first;
 end;
 $$;
 
-
+drop table info cascade;
 
 
 create table car(
@@ -98,7 +102,6 @@ create table car(
     model varchar not null,
     price_per_day int not null,
     primary key (car_number)
-
 );
 
 ALTER TABLE car ADD FOREIGN KEY (branch_number) REFERENCES branch(branch_number) on delete cascade;
@@ -139,13 +142,11 @@ create table order_car(
     client_id int,
     date_of_renting date,
     period_of_renting int,
-    primary key (order_id),
-    foreign key (car_number)
-                   references car(car_number) on delete cascade
+    primary key (order_id)
 );
 
 ALTER TABLE order_car ADD FOREIGN KEY (client_id) REFERENCES client(client_id) on delete cascade;
-
+ALTER TABLE order_car ADD FOREIGN KEY (car_number) REFERENCES car(car_number) on delete cascade;
 /*insert into orders*/
 do
 $$
@@ -163,7 +164,7 @@ begin
                 counter1:= counter1 + 1;
 
                 insert into order_car(car_number, client_id, date_of_renting, period_of_renting)
-                values (random()*(300-1)+1, random()*(99979-1)+1, date '01-01-2021' + counter1, random()*(10-1)+1);
+                values (random()*(300-1)+1, random()*(97930-1)+1, date '01-01-2021' + counter1, random()*(10-1)+1);
             end loop second;
         end loop first;
 end;
@@ -172,3 +173,6 @@ $$;
 
 drop table order_car cascade;
 
+update info
+set client_id = NULL
+where info_id between 1 and 20;
