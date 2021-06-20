@@ -40,17 +40,26 @@ end;$$;
 call add_ord(20, 40);
 
 
-create procedure loop_insert(f_name varchar, countr varchar)
+create or replace procedure  loop_insert(f_name varchar, countr varchar)
 language plpgsql
 as $$
     declare count int := 0;
+    count_loops int := 0;
+    count_after_loop int := 0;
         begin
+        select count(user_id) into count_loops from users;
         loop
             exit when count = 5;
             count:= count + 1;
             insert into users(first_name, country)
             VALUES (f_name, countr);
         end loop;
+        select count(user_id) into count_after_loop from users;
+        if (count_loops = count_after_loop) then
+        rollback;
+        else
+        commit;
+        end if;
     end;
     $$;
 drop procedure loop_insert(f_name varchar, countr varchar);
