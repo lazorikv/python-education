@@ -27,12 +27,14 @@ create or replace procedure update_branch()
 language plpgsql
 as $$
     begin
+    savepoint sp1;
         update car
         set brand = 'Mersedes'
         where branch_number in
         (select branch_number from order_car o
         left join car c on o.car_number=c.car_number
         where date_of_renting between '2021-05-01' and '2021-06-01');
+        rollback to savepoint sp1;
     end;
     $$;
 
